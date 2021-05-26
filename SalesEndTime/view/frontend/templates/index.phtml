@@ -1,0 +1,29 @@
+<?php /** @var \Perspective\SalesEndTime\Block\Index $block */
+?>
+<?php
+$date = $block->getDatePrice();
+$fromDate = $date[1];
+$endDate = $date[2];
+$nowDate = date('Y-m-d h:m:s');
+if ($fromDate <= $nowDate && $nowDate <= $endDate){
+?>
+<div id="getting-started"></div>
+    <b>
+<script type="text/javascript">
+    require([
+        'jquery',
+        'countdown'
+    ], function (
+        $, countdown
+    ) {
+        jQuery("#getting-started")
+            .countdown("<?= $date[0]?>", function(event) {
+                jQuery(this).text(
+                    event.strftime('%D Дней %H Часов %M Минут %S Секунд')
+                );
+            });
+    });
+</script>
+    </b>
+<?php
+}
