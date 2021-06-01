@@ -1,11 +1,37 @@
 <?php /** @var \Perspective\SalesEndTime\Block\Index $block */
 ?>
 <?php
-$date = $block->getDatePrice();
-$fromDate = $date[1];
-$endDate = $date[2];
-$nowDate = date('Y-m-d h:m:s');
-if ($fromDate <= $nowDate && $nowDate <= $endDate){
+$dateRules = $block->getCurrectProductRules();
+$dateSpecial = $block->getDatePrice();
+$allRules = $block->getCatalogRulePrices();
+if ($dateSpecial != '' && $dateRules != '') {
+    if ($allRules){
+        echo "Список всех правил: ";
+        foreach ($allRules as $allRule){
+            ?> <p><?php echo "Имя: "?> <b><?=$allRule['name']?></b> <?=" заканчивается "?> <b> <?=$allRule['date'];?></b></p><?php
+        }
+    }?>
+
+    <?php
+    if ($dateRules[0] >= $dateSpecial[0]) {
+        $endConvert = substr(str_replace("-", "/", $dateSpecial[0]), 0, 10);?>
+        <b><?= $dateSpecial[1]; ?></b>
+        <?php
+    } else {
+        $endConvert = substr(str_replace("-", "/", $dateRules[0]), 0, 10);?>
+        <b><?= $dateRules[1]; ?></b>
+        <?php
+    }
+}elseif ($dateRules == ''){
+    $endConvert = substr(str_replace("-", "/", $dateSpecial[0]), 0, 10);?>
+     <b><?= $dateSpecial[1]; ?></b>
+    <?php
+}else{
+    $endConvert = substr(str_replace("-", "/", $dateRules[0]), 0, 10);?>
+    <b><?= $dateRules[1]; ?></b>
+    <?php
+}
+if (isset($endConvert)){
 ?>
 <div id="getting-started"></div>
     <b>
@@ -17,7 +43,7 @@ if ($fromDate <= $nowDate && $nowDate <= $endDate){
         $, countdown
     ) {
         jQuery("#getting-started")
-            .countdown("<?= $date[0]?>", function(event) {
+            .countdown("<?= $endConvert?>", function(event) {
                 jQuery(this).text(
                     event.strftime('%D Дней %H Часов %M Минут %S Секунд')
                 );
